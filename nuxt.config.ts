@@ -5,8 +5,18 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/ui',
     '@nuxtjs/tailwindcss',
-    //'@nuxtjs/supabase',
+    '@nuxtjs/supabase',
     '@nuxt/fonts',
   ],
+  
+  supabase: {
+    redirectOptions: {
+      login: '/',
+      callback: '/confirm',
+      include: undefined,
+      exclude: [],
+      cookieRedirect: false,
+    }
+  },
   devtools: { enabled: true }
 })

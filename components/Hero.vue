@@ -1,3 +1,24 @@
+<script setup lang="ts">
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+
+watchEffect(() => {
+  if (user.value) {
+    console.log('navigate to / !')
+  }
+})
+
+const signInWithOAuth = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'spotify',
+    options: {
+      redirectTo: 'http://localhost:3000/confirm',
+    },
+  })
+  if (error) console.log(error)
+}
+</script>
+
 <template>
     <section class="container mx-auto text-center py-20">
     <h1 class="text-5xl py-4 font-bold mb-4">Build the Ultimate Playlist With Your Crew</h1>
@@ -7,6 +28,7 @@
     <div class="flex items-center justify-center">
         <UButton
         icon="ri:spotify-fill"
+        @click="signInWithOAuth"
         size="lg"
         color="green"
         variant="solid"

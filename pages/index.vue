@@ -16,7 +16,7 @@
         <Icon name="mdi:github" size="25px"/>
         </a>
         <a
-        href="https://discord.com/users/1063101828151132180"
+        href="https://x.com/dipsticksi"
         target="_blank"
         class="text-white underline"
         >

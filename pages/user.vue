@@ -1,4 +1,10 @@
 <script setup lang="ts">
+const supabase = useSupabaseClient()
+const signOut = async () => {
+  const { error } = await supabase.auth.signOut()
+  if (error) console.log(error)
+  else navigateTo('/')
+}
 </script>
 
 <template>
@@ -18,6 +24,7 @@
             </div>
               <UButton
                 icon="ic:outline-log-out"
+                @click="signOut"
                 size="sm"
                 color="red"
                 square
