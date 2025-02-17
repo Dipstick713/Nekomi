@@ -13,21 +13,21 @@
         target="_blank"
         class="text-white underline"
         >
-        <Icon name="mdi:github" size="25px"/>
+        <Icon name="mdi:github" class="hover:opacity-50 transition-opacity duration-300" size="25px"/>
         </a>
         <a
         href="https://x.com/dipsticksi"
         target="_blank"
         class="text-white underline"
         >
-        <Icon name="bi:twitter-x" size="25px"/>
+        <Icon name="bi:twitter-x" class="hover:opacity-50 transition-opacity duration-300" size="25px"/>
         </a> 
         <a
         href="https://discord.com/users/1063101828151132180"
         target="_blank"
         class="text-white underline"
         >
-        <Icon name="ic:baseline-discord" size="25px"/>
+        <Icon name="ic:baseline-discord" class="hover:opacity-50 transition-opacity duration-300" size="25px"/>
         </a>  
         </nav>
       </div>
@@ -43,7 +43,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="p-6 bg-neutral-700 rounded-lg">
             <Icon name="material-symbols:playlist-add" size="70px" class="text-green-400"/>
-            <h3 class="text-xl font-bold mb-2 py-1">Make Playlist Together</h3>
+            <h3 class="text-xl font-bold mb-2 py-1 ">Make Playlist Together</h3>
             <p>Share music and create the perfect playlist with your favorite people. Start curating memories together today!</p>
           </div>
           <div class="p-6 bg-neutral-700 rounded-lg">
@@ -63,35 +63,34 @@
     <!-- Built With Section -->
     <section class="container mx-auto text-center py-16">
       <h2 class="text-3xl font-bold mb-8">Built With</h2>
-      <p class="text-5xl space-x-10">
-        <a
-        href="https://nuxt.com/"
-        target="_blank"
-        >
-          <Icon name="logos:nuxt-icon"/>
-        </a>
+      <div class="text-5xl space-x-10 flex justify-center">
+          <a
+          href="https://nuxt.com/"
+          target="_blank"
+          >
+            <Icon name="logos:nuxt-icon" class="hover:opacity-50 transition-opacity duration-300"/>
+          </a>
         <a
         href="https://tailwindcss.com/"
         target="_blank"
+        class="block"
         >
-          <Icon name="logos:tailwindcss-icon"/>
+          <Icon name="logos:tailwindcss-icon" class="hover:opacity-50 transition-opacity duration-300"/>
         </a>
         <a
         href="https://supabase.com/"
         target="_blank"
         >
-          <Icon name="logos:supabase-icon"/>
+          <Icon class="hover:opacity-50 transition-opacity duration-300" name="logos:supabase-icon"/>
         </a>
         <a
         href="https://www.postgresql.org/"
         target="_blank"
         >
-          <Icon name="logos:postgresql"/>
+          <Icon name="logos:postgresql" class="hover:opacity-50 transition-opacity duration-300"/>
         </a>
         
-        
-        
-      </p>
+      </div>
 
     </section>
 
@@ -102,7 +101,7 @@
         target="_blank"
         class="text-white underline"
         >
-          <div class="flex">
+          <div class="flex hover:opacity-50 transition-opacity duration-300">
             <p class="px-2">Github Repo</p>
             <Icon name="mdi:github" size="25px"/>
           </div>
