@@ -64,23 +64,48 @@
     <section class="container mx-auto text-center py-16">
       <h2 class="text-3xl font-bold mb-8">Built With</h2>
       <p class="text-5xl space-x-10">
-        <Icon name="logos:nuxt-icon"/>
-        <Icon name="logos:tailwindcss-icon"/>
-        <Icon name="logos:supabase-icon"/>
-        <Icon name="logos:postgresql"/>
+        <a
+        href="https://nuxt.com/"
+        target="_blank"
+        >
+          <Icon name="logos:nuxt-icon"/>
+        </a>
+        <a
+        href="https://tailwindcss.com/"
+        target="_blank"
+        >
+          <Icon name="logos:tailwindcss-icon"/>
+        </a>
+        <a
+        href="https://supabase.com/"
+        target="_blank"
+        >
+          <Icon name="logos:supabase-icon"/>
+        </a>
+        <a
+        href="https://www.postgresql.org/"
+        target="_blank"
+        >
+          <Icon name="logos:postgresql"/>
+        </a>
+        
+        
+        
       </p>
 
     </section>
 
     <!-- Footer -->
     <footer class="bg-neutral-800 p-6 flex flex-row justify-center text-center">
-        <p class="px-2">Github Repo</p>
         <a
         href="https://github.com/Dipstick713"
         target="_blank"
         class="text-white underline"
         >
-        <Icon name="mdi:github" size="25px"/>
+          <div class="flex">
+            <p class="px-2">Github Repo</p>
+            <Icon name="mdi:github" size="25px"/>
+          </div>
         </a>
     </footer>
   </div>
