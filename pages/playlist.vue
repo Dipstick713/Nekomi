@@ -55,6 +55,7 @@ const activeTab = ref('Songs')
     </nav>
       
         <Playlist v-if="activeTab === 'Songs'"/>
+        <VoteList v-if="activeTab === 'Vote'"/>
       </main>
     </div>
   </template>
