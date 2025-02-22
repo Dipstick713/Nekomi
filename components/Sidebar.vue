@@ -36,8 +36,8 @@ const signOut = async () => {
   
         <!-- Navigation Links -->
         <nav class="space-y-2">
-          <a href="#" class="block hover:bg-neutral-700 p-2 rounded">Your Playlists</a>
-          <a href="#" class="block hover:bg-neutral-700 p-2 rounded">Create/Join Playlist</a>
+          <a href=/user class="block hover:bg-neutral-700 p-2 rounded">Your Playlists</a>
+          <a href=/create class="block hover:bg-neutral-700 p-2 rounded">Create/Join Playlist</a>
         </nav>
       </aside>
 </template>

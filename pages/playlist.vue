@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LeaderBoard from '~/components/LeaderBoard.vue';
+
 const activeTab = ref('Songs')
 </script>
 
@@ -56,6 +58,7 @@ const activeTab = ref('Songs')
       
         <Playlist v-if="activeTab === 'Songs'"/>
         <VoteList v-if="activeTab === 'Vote'"/>
+        <LeaderBoard v-if="activeTab === 'Leaderboard'"/>
       </main>
     </div>
   </template>
