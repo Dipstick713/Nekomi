@@ -23,7 +23,7 @@ const signOut = async () => {
             </div>
               <UButton
                 icon="ic:outline-log-out"
-                @click="signOut"
+                :click="signOut"
                 size="sm"
                 color="red"
                 square

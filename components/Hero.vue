@@ -1,18 +1,11 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient()
-const user = useSupabaseUser()
-
-watchEffect(() => {
-  if (user.value) {
-    console.log('navigate to / !')
-  }
-})
 
 const signInWithOAuth = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'spotify',
     options: {
-      redirectTo: 'http://localhost:3000/confirm',
+      redirectTo: `${window.location.origin}/confirm`,
     },
   })
   if (error) console.log(error)
@@ -27,8 +20,8 @@ const signInWithOAuth = async () => {
     </p>
     <div class="flex items-center justify-center">
         <UButton
-        icon="ri:spotify-fill"
         @click="signInWithOAuth"
+        icon="ri:spotify-fill"
         size="lg"
         color="green"
         variant="solid"
