@@ -1,8 +1,4 @@
 <script setup lang="ts">
-const user = useSupabaseUser()
-if(user){
-  navigateTo('/user')
-}
 </script>
 
 <template>
@@ -95,7 +91,6 @@ if(user){
         </a>
         
       </div>
-
     </section>
 
     <!-- Footer -->

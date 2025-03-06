@@ -5,10 +5,13 @@ const signInWithOAuth = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'spotify',
     options: {
-      redirectTo: `${window.location.origin}/confirm`,
+      redirectTo: 'http://localhost:3000/confirm',
     },
   })
-  if (error) console.log(error)
+  if (error) {
+    console.log(error)
+    return
+  }
 }
 </script>
 

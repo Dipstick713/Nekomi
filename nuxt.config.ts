@@ -13,9 +13,15 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/',
       callback: '/confirm',
-      include: undefined,
-      exclude: [],
-      cookieRedirect: false,
+      exclude:[]
+    }
+  },
+  runtimeConfig: {
+    spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseKey: process.env.SUPABASE_KEY,
+      spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
     }
   },
   devtools: { enabled: true }
