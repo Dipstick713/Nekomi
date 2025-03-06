@@ -1,5 +1,13 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient()
+const user= useSupabaseUser()
+const {data} = await supabase
+  .from('users')
+  .select('display_name,email')
+  .eq('id', user.value.id)
+  .single();
+
+
 const signOut = async () => {
   const { error } = await supabase.auth.signOut()
   if (error) console.log(error)
@@ -19,7 +27,7 @@ const signOut = async () => {
                 alt="Avatar"
                 class="mx-2"
                 label="Log out"
-              />Dipstick
+              />{{ data.display_name }}
             </div>
               <UButton
                 icon="ic:outline-log-out"
@@ -31,7 +39,7 @@ const signOut = async () => {
               />
             </div>
 
-          <div class="text-gray-400 mx-2 mb-3 mt-1 text-sm">example@gmail.com</div>
+          <div class="text-gray-400 mx-2 mb-3 mt-1 text-sm">{{ data.email }}</div>
         </div>
   
         <!-- Navigation Links -->
