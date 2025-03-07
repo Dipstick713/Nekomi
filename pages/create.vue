@@ -1,9 +1,123 @@
 <script setup>
+const supabase = useSupabaseClient()
+const session = useSupabaseSession()
+
 const activeTab = ref('join')
 const roomCode = ref('')
+const roomName = ref('')
 
 const setActiveTab = (tab) => {
   activeTab.value = tab
+}
+
+const createRoom = async () => {
+  if (!session.value) {
+    console.error('User not authenticated')
+    return
+  }
+
+  const { data: playlist, error: playlistError } = await supabase
+    .from('playlists')
+    .insert([
+      {
+        name: roomName.value,
+        owner_id: session.value.user.id,
+        spotify_playlist_id: '',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    ])
+    .select()
+    .single()
+
+  if (playlistError) {
+    console.error('Error creating playlist:', playlistError)
+    return
+  }
+
+  const { error: memberError } = await supabase
+    .from('members')
+    .insert([
+      {
+        playlist_id: playlist.id,
+        user_id: session.value.user.id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    ])
+
+  if (memberError) {
+    console.error('Error adding member:', memberError)
+    return
+  }
+
+  navigateTo('/user')
+}
+
+const joinRoom = async () => {
+  if (!session.value) {
+    console.error('User not authenticated')
+    return
+  }
+
+  if (!roomCode.value) {
+    console.error('Room code is required')
+    return
+  }
+
+  // Fetch the playlist by room code (playlist ID)
+  const { data: playlist, error: playlistError } = await supabase
+    .from('playlists')
+    .select('*')
+    .eq('id', roomCode.value)
+    .single()
+
+  if (playlistError) {
+    console.error('Error fetching playlist:', playlistError)
+    return
+  }
+
+  if (!playlist) {
+    console.error('Playlist not found')
+    return
+  }
+
+  // Check if the user is already a member of the playlist
+  const { data: existingMember, error: memberCheckError } = await supabase
+    .from('members')
+    .select('*')
+    .eq('playlist_id', playlist.id)
+    .eq('user_id', session.value.user.id)
+    .single()
+
+  if (memberCheckError && memberCheckError.code !== 'PGRST116') { // Ignore "No rows found" error
+    console.error('Error checking membership:', memberCheckError)
+    return
+  }
+
+  if (existingMember) {
+    console.error('User is already a member of this playlist')
+    return
+  }
+
+  // Add the user to the members table
+  const { error: memberError } = await supabase
+    .from('members')
+    .insert([
+      {
+        playlist_id: playlist.id,
+        user_id: session.value.user.id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    ])
+
+  if (memberError) {
+    console.error('Error joining playlist:', memberError)
+    return
+  }
+
+  console.log('User joined playlist successfully:', playlist)
 }
 </script>
 
@@ -22,7 +136,7 @@ const setActiveTab = (tab) => {
           }`"
           @click="setActiveTab('join')"
         >
-          Join Room
+          Join Playlist
         </button>
         <button 
           :class="`py-2 px-4 rounded-md font-medium ${
@@ -34,14 +148,14 @@ const setActiveTab = (tab) => {
           color="blue"
           @click="setActiveTab('create')"
         >
-          Create Room
+          Create Playlist
         </button>
       </div>
       
       <!-- Join Room Panel -->
       <div v-if="activeTab === 'join'" class="border border-gray-600 rounded-lg p-6 mx-4 mb-4"> <!-- Added margin -->
-        <h2 class="text-white text-xl font-bold mb-2">Join Room</h2>
-        <p class="text-blue-400 text-sm mb-4">Enter the room code here.</p>
+        <h2 class="text-white text-xl font-bold mb-2">Join Playlist</h2>
+        <p class="text-blue-400 text-sm mb-4">Enter the playlist code here.</p>
         
         <input
           type="text"
@@ -51,27 +165,29 @@ const setActiveTab = (tab) => {
         />
         
         <button 
+          @click="joinRoom"
           class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-md transition-colors"
         >
-          Join Room
+          Join
         </button>
       </div>
       
       <!-- Create Room Panel -->
       <div v-if="activeTab === 'create'" class="border border-gray-600 rounded-lg p-6 mx-4 mb-4"> <!-- Added margin -->
-        <h2 class="text-white text-xl font-bold mb-2">Create Room</h2>
-        <p class="text-blue-400 text-sm mb-4">Set up a new room.</p>
+        <h2 class="text-white text-xl font-bold mb-2">Create Playlist</h2>
+        <p class="text-blue-400 text-sm mb-4">Set up a new playlist.</p>
         
         <input
           type="text"
           v-model="roomName"
           placeholder="Enter Room Name"
-          class="w-full bg-gray-700 text-white py-3 px-4 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full bg-zinc-700 text-white py-3 px-4 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button 
+          @click="createRoom"
           class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-md transition-colors"
         >
-          Create New Room
+          Create
         </button>
       </div>
     </div>
