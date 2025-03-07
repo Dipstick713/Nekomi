@@ -1,4 +1,6 @@
 <script setup>
+import { nanoid } from 'nanoid';
+
 const supabase = useSupabaseClient()
 const session = useSupabaseSession()
 
@@ -9,6 +11,12 @@ const roomName = ref('')
 const setActiveTab = (tab) => {
   activeTab.value = tab
 }
+
+const generateRoomCode = () => {
+  return nanoid(6);
+};
+
+const playlistCode = generateRoomCode();
 
 const createRoom = async () => {
   if (!session.value) {
@@ -22,7 +30,7 @@ const createRoom = async () => {
       {
         name: roomName.value,
         owner_id: session.value.user.id,
-        spotify_playlist_id: '',
+        playlist_code: playlistCode,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }
@@ -59,18 +67,17 @@ const joinRoom = async () => {
     console.error('User not authenticated')
     return
   }
-
   if (!roomCode.value) {
-    console.error('Room code is required')
+    console.error('Playlist code is required')
     return
   }
 
-  // Fetch the playlist by room code (playlist ID)
+  // Fetch the playlist by playlist code
   const { data: playlist, error: playlistError } = await supabase
     .from('playlists')
     .select('*')
-    .eq('id', roomCode.value)
-    .single()
+    .eq('playlist_code', roomCode.value.trim())
+    .maybeSingle()
 
   if (playlistError) {
     console.error('Error fetching playlist:', playlistError)
@@ -90,7 +97,7 @@ const joinRoom = async () => {
     .eq('user_id', session.value.user.id)
     .single()
 
-  if (memberCheckError && memberCheckError.code !== 'PGRST116') { // Ignore "No rows found" error
+  if (memberCheckError && memberCheckError.code !== 'PGRST116') {
     console.error('Error checking membership:', memberCheckError)
     return
   }
@@ -117,7 +124,7 @@ const joinRoom = async () => {
     return
   }
 
-  console.log('User joined playlist successfully:', playlist)
+  navigateTo('/user')
 }
 </script>
 
@@ -160,7 +167,7 @@ const joinRoom = async () => {
         <input
           type="text"
           v-model="roomCode"
-          placeholder="Enter Room Code"
+          placeholder="Enter Playlist Code"
           class="w-full bg-zinc-700 text-white py-3 px-4 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         
@@ -180,7 +187,7 @@ const joinRoom = async () => {
         <input
           type="text"
           v-model="roomName"
-          placeholder="Enter Room Name"
+          placeholder="Enter Playlist Name"
           class="w-full bg-zinc-700 text-white py-3 px-4 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button 
