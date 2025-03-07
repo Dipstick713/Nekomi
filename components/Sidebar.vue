@@ -3,10 +3,9 @@ const supabase = useSupabaseClient()
 const user= useSupabaseUser()
 const {data} = await supabase
   .from('users')
-  .select('display_name,email')
+  .select('display_name,email,avatar_url')
   .eq('id', user.value.id)
   .single();
-
 
 const signOut = async () => {
   const { error } = await supabase.auth.signOut()
@@ -23,7 +22,7 @@ const signOut = async () => {
           <div class="flex flex-row justify-between">
             <div class="text-lg flex font-bold py-1">
               <UAvatar
-                src="https://avatars.githubusercontent.com/u/739984?v=4"
+                :src=data.avatar_url
                 alt="Avatar"
                 class="mx-2"
                 label="Log out"
