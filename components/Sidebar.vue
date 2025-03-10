@@ -43,8 +43,8 @@ const signOut = async () => {
   
         <!-- Navigation Links -->
         <nav class="space-y-2">
-          <a href=/user class="block hover:bg-neutral-700 p-2 rounded">Your Playlists</a>
-          <a href=/create class="block hover:bg-neutral-700 p-2 rounded">Create/Join Playlist</a>
+          <NuxtLink to=/user class="block hover:bg-neutral-700 p-2 rounded">Your Playlists</NuxtLink>
+          <NuxtLink href=/create class="block hover:bg-neutral-700 p-2 rounded">Create/Join Playlist</NuxtLink>
         </nav>
       </aside>
 </template>
