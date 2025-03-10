@@ -4,10 +4,19 @@ const user = useSupabaseUser()
 const playlists = ref()
 const { data } = await supabase
   .from('playlists')
-  .select('name,owner_id,users:owner_id (display_name)')
+  .select('name,owner_id, playlist_code,users:owner_id (display_name)')
   .eq('user_id', user.value.id)
 
 playlists.value=data;
+
+const copyPlaylistCode = async (playlistCode: string) => {
+  try {
+    await navigator.clipboard.writeText(playlistCode)
+    alert('Playlist code copied to clipboard!')
+  } catch (err) {
+    console.error('Failed to copy')
+  }
+}
 </script>
 
 <template>
@@ -23,7 +32,7 @@ playlists.value=data;
             <h2 class="text-xl font-bold mb-2">{{ playlist.name }}</h2>
             <p class="text-gray-400 mb-4">Created by : {{ playlist.users.display_name }}</p>
             <div class="flex space-x-4">
-              <UButton>
+              <UButton @click="copyPlaylistCode(playlist.playlist_code)">
                 <Icon name="material-symbols:content-copy" />Copy Link
               </UButton>
               <UButton>
