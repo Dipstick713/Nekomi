@@ -1,4 +1,13 @@
 <script setup lang="ts">
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+const playlists = ref()
+const { data } = await supabase
+  .from('playlists')
+  .select('name,owner_id,users:owner_id (display_name)')
+  .eq('user_id', user.value.id)
+
+playlists.value=data;
 </script>
 
 <template>
@@ -10,10 +19,9 @@
   
         <!-- Room Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          <!-- Room (Hard coded for now)--> 
-          <div class="bg-zinc-800 p-6 rounded-lg">
-            <h2 class="text-xl font-bold mb-2">Dipstick</h2>
-            <p class="text-gray-400 mb-4">Created by: dipstick</p>
+          <div v-for="playlist in playlists" :key="playlist.id" class="bg-zinc-800 p-6 rounded-lg">
+            <h2 class="text-xl font-bold mb-2">{{ playlist.name }}</h2>
+            <p class="text-gray-400 mb-4">Created by : {{ playlist.users.display_name }}</p>
             <div class="flex space-x-4">
               <UButton>
                 <Icon name="material-symbols:content-copy" />Copy Link
