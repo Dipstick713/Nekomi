@@ -4,6 +4,97 @@ const user = useSupabaseUser()
 
 const searchQuery = ref('') 
 const searchResults = ref([]) 
+const spotifyAccessToken = ref('') 
+const spotifyTokenExpiry = ref(0) 
+
+const fetchSpotifyToken = async () => {
+  const { data: userData, error: userError } = await supabase
+    .from('users')
+    .select('spotify_access_token, spotify_token_expiry')
+    .eq('id', user.value.id)
+    .single()
+
+  if (userError) {
+    console.error('Error fetching Spotify token:', userError)
+    return
+  }
+
+  spotifyAccessToken.value = userData.spotify_access_token
+  spotifyTokenExpiry.value = new Date(userData.spotify_token_expiry).getTime()
+}
+
+// Function to refresh the Spotify access token
+const refreshSpotifyToken = async () => {
+  try {
+    // Fetch the user's Spotify refresh token from Supabase
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('spotify_refresh_token')
+      .eq('id', user.value.id)
+      .single()
+
+    if (userError || !userData.spotify_refresh_token) {
+      console.error('Error fetching Spotify refresh token:', userError)
+      return
+    }
+
+    const refreshToken = userData.spotify_refresh_token
+
+    // Make a request to the Spotify API to refresh the access token
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: 'your-spotify-client-id', // Replace with your Spotify client ID
+      }),
+    })
+
+    if (!response.ok) {
+      console.error('Error refreshing Spotify token:', await response.text())
+      return
+    }
+
+    const data = await response.json()
+
+    // Update the Spotify access token and expiry in the database
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        spotify_access_token: data.access_token,
+        spotify_token_expiry: new Date(Date.now() + data.expires_in * 1000).toISOString(),
+      })
+      .eq('id', user.value.id)
+
+    if (updateError) {
+      console.error('Error updating Spotify token:', updateError)
+      return
+    }
+
+    spotifyAccessToken.value = data.access_token
+    spotifyTokenExpiry.value = Date.now() + data.expires_in * 1000
+
+    console.log('Spotify access token refreshed successfully')
+  } catch (err) {
+    console.error('Unexpected error refreshing Spotify token:', err)
+  }
+}
+
+watch(
+  () => spotifyTokenExpiry.value,
+  async (newExpiry) => {
+    if (newExpiry && newExpiry <= Date.now()) {
+      console.log('Spotify access token expired. Refreshing...')
+      await refreshSpotifyToken()
+    }
+  },
+  { immediate: true } 
+)
+
+fetchSpotifyToken()
 
 const searchSongs = async () => {
   if (!searchQuery.value) {
