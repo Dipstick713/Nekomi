@@ -135,7 +135,6 @@ const searchSongs = async () => {
 
     const data = await response.json()
     searchResults.value = data.tracks.items
-    console.log(searchResults.value)
   } catch (err) {
     console.error('Unexpected error:', err)
     alert('An unexpected error occurred. Please try again.')
