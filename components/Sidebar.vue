@@ -16,6 +16,7 @@ const signOut = async () => {
 
 <template>
       <!-- Sidebar -->
+       <div></div>
       <aside class="w-64 bg-neutral-800 border-r border-neutral-600 p-6">
         <!-- User Info -->
         <div class="mb-3 mt-3 border-b border-neutral-600">
@@ -45,6 +46,7 @@ const signOut = async () => {
         <nav class="space-y-2">
           <NuxtLink to=/user class="block hover:bg-neutral-700 p-2 rounded">Your Playlists</NuxtLink>
           <NuxtLink href=/create class="block hover:bg-neutral-700 p-2 rounded">Create/Join Playlist</NuxtLink>
+          <NuxtLink href=/add class="block hover:bg-neutral-700 p-2 rounded">Add Songs</NuxtLink>
         </nav>
       </aside>
 </template>
