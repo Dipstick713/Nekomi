@@ -55,7 +55,7 @@ const getPlaylist = async (code: string) => {
         <div v-if="verify==='noUser'" class="text-red-400">The user is not a member in this playlist.</div>
         <div v-if="verify==='true'"class="flex flex-row justify-between items-center mb-8">
             <div class="w-full border-t-4 border-neutral-700 mt-4 mb-2">
-                <h3 class="text-2xl font-bold pt-2 mt-6 mb-4">Playlist: Yo</h3>
+                <h3 class="text-2xl font-bold pt-2 mt-6 mb-4">Playlist: {{ name }}</h3>
                 <AddSong/>
             </div>
         </div>

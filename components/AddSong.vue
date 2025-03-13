@@ -171,8 +171,15 @@ const searchSongs = async () => {
           </thead>
           <tbody>
             <!-- Dynamic Song Rows -->
-            <tr v-for="(song, index) in searchResults" :key="song.id" class="border-b border-gray-700">
-              <td class="py-3 px-4">{{ index + 1 }}</td>
+            <tr v-for="song in searchResults" :key="song.id" class="border-b border-gray-700 hover:bg-green-700">
+              <td class="py-3 px-4">
+                <UAvatar
+                :src=song.album.images[0].url
+                alt="Album Cover"
+                size="md"
+                label="Album Cover"
+              />
+              </td>
               <td class="py-3 px-4">{{ song.name }}</td>
               <td class="py-3 px-4">{{ song.artists.map(artist => artist.name).join(', ') }}</td>
               <td class="py-3 px-4">{{ Math.floor(song.duration_ms / 60000) }}:{{ ((song.duration_ms % 60000) / 1000).toFixed(0).padStart(2, '0') }}</td>
