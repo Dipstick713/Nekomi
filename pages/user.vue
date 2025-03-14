@@ -4,7 +4,7 @@ const user = useSupabaseUser()
 const playlists = ref()
 const { data } = await supabase
   .from('playlists')
-  .select('name,owner_id, playlist_code,users:owner_id (display_name)')
+  .select('id,name,owner_id, playlist_code,users:owner_id (display_name)')
   .eq('user_id', user.value.id)
 
 playlists.value=data;
@@ -35,7 +35,9 @@ const copyPlaylistCode = async (playlistCode: string) => {
               <UButton @click="copyPlaylistCode(playlist.playlist_code)">
                 <Icon name="material-symbols:content-copy" />Copy Link
               </UButton>
-              <UButton>
+              <UButton
+                 @click="navigateTo(`/playlist/${playlist.id}`)"
+              >
                 Enter playlist <Icon name="material-symbols:arrow-forward-ios-rounded"/>
               </UButton>
             </div>
