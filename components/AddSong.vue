@@ -7,6 +7,15 @@ const searchResults = ref([])
 const spotifyAccessToken = ref('') 
 const spotifyTokenExpiry = ref(0) 
 
+const config = useRuntimeConfig()
+
+const toggleLike = (songId: string) => {
+  const song = searchResults.value.find((song) => song.id === songId);
+  if (song) {
+    song.isLiked = !song.isLiked; // Toggle the isLiked property for the specific song
+  }
+};
+
 const fetchSpotifyToken = async () => {
   const { data: userData, error: userError } = await supabase
     .from('users')
@@ -18,7 +27,7 @@ const fetchSpotifyToken = async () => {
     console.error('Error fetching Spotify token:', userError)
     return
   }
-
+  console.log(spotifyAccessToken.value)
   spotifyAccessToken.value = userData.spotify_access_token
   spotifyTokenExpiry.value = new Date(userData.spotify_token_expiry).getTime()
 }
@@ -32,40 +41,37 @@ const refreshSpotifyToken = async () => {
       .select('spotify_refresh_token')
       .eq('id', user.value.id)
       .single()
-
+    
     if (userError || !userData.spotify_refresh_token) {
       console.error('Error fetching Spotify refresh token:', userError)
       return
     }
 
     const refreshToken = userData.spotify_refresh_token
+    
+    const url = "https://accounts.spotify.com/api/token";
 
-    // Make a request to the Spotify API to refresh the access token
-    const response = await fetch('https://accounts.spotify.com/api/token', {
+    const payload = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${btoa(`${config.public.spotifyClientId}:${config.public.spotifyClientSecret}`)}`,
       },
       body: new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-        client_id: 'your-spotify-client-id', // Replace with your Spotify client ID
+        client_id: config.public.spotifyClientId
       }),
-    })
-
-    if (!response.ok) {
-      console.error('Error refreshing Spotify token:', await response.text())
-      return
     }
-
-    const data = await response.json()
+    const body = await fetch(url, payload);
+    const response = await body.json();
 
     // Update the Spotify access token and expiry in the database
     const { error: updateError } = await supabase
       .from('users')
       .update({
-        spotify_access_token: data.access_token,
-        spotify_token_expiry: new Date(Date.now() + data.expires_in * 1000).toISOString(),
+        spotify_access_token: response.access_token,
+        spotify_token_expiry: new Date(Date.now() + response.expires_in * 1000).toISOString(),
       })
       .eq('id', user.value.id)
 
@@ -74,8 +80,8 @@ const refreshSpotifyToken = async () => {
       return
     }
 
-    spotifyAccessToken.value = data.access_token
-    spotifyTokenExpiry.value = Date.now() + data.expires_in * 1000
+    spotifyAccessToken.value = response.access_token
+    spotifyTokenExpiry.value = Date.now() + response.expires_in * 1000
 
     console.log('Spotify access token refreshed successfully')
   } catch (err) {
@@ -134,7 +140,9 @@ const searchSongs = async () => {
     }
 
     const data = await response.json()
-    searchResults.value = data.tracks.items
+    searchResults.value = data.tracks.items.map((song) => ({
+      ...song,
+      isLiked: false,}))
   } catch (err) {
     console.error('Unexpected error:', err)
     alert('An unexpected error occurred. Please try again.')
@@ -184,7 +192,20 @@ const searchSongs = async () => {
               <td class="py-3 px-4">{{ song.artists.map(artist => artist.name).join(', ') }}</td>
               <td class="py-3 px-4">{{ Math.floor(song.duration_ms / 60000) }}:{{ ((song.duration_ms % 60000) / 1000).toFixed(0).padStart(2, '0') }}</td>
               <td class="py-3 px-4">
-                <LikeButton/>
+                <button class="flex items-center gap-1" @click="toggleLike(song.id)">
+                  <Icon
+                  v-if="!song.isLiked"
+                  class="p-1 text-white hover:bg-gray-800 rounded-full cursor-pointer"
+                  name="material-symbols-light:favorite-outline"
+                  size="28"
+                  />
+                  <Icon
+                  v-else
+                  class="p-1 text-green-400 hover:bg-gray-800 rounded-full cursor-pointer"
+                  name="material-symbols:favorite-rounded"
+                  size="28"
+                  />
+                </button>
               </td>
             </tr>
           </tbody>

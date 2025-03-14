@@ -17,11 +17,11 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
-    spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseKey: process.env.SUPABASE_KEY,
       spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
+      spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     }
   },
   devtools: { enabled: true }
