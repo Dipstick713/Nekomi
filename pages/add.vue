@@ -19,10 +19,10 @@ const getPlaylist = async (code: string) => {
     else 
     {
         const {data: isMember} = await supabase
-        .from('playlists')
-        .select('name')
+        .from('members')
+        .select('user_id')
         .eq('user_id', user.value.id)
-        .eq('playlist_code', code.trim())
+        .eq('playlist_id', isPlaylist.id)
         .single()
         if(!isMember)
         {
