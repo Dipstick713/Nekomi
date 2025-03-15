@@ -9,12 +9,12 @@ const spotifyTokenExpiry = ref(0)
 
 const config = useRuntimeConfig()
 
-const toggleLike = (songId: string) => {
-  const song = searchResults.value.find((song) => song.id === songId);
-  if (song) {
-    song.isLiked = !song.isLiked; // Toggle the isLiked property for the specific song
-  }
-};
+const props = defineProps({
+  playlistId: {
+    type: String,
+    required: true,
+  },
+});
 
 const fetchSpotifyToken = async () => {
   const { data: userData, error: userError } = await supabase
@@ -102,6 +102,24 @@ watch(
 
 fetchSpotifyToken()
 
+const fetchSongsFromTable = async () => {
+  try {
+    const { data: songs, error } = await supabase
+      .from('songs')
+      .select('spotify_song_id');
+
+    if (error) {
+      console.error('Error fetching songs from table:', error);
+      return [];
+    }
+
+    return songs.map((song) => song.spotify_song_id);
+  } catch (err) {
+    console.error('Unexpected error fetching songs from table:', err);
+    return [];
+  }
+};
+
 const searchSongs = async () => {
   if (!searchQuery.value) {
     alert('Please enter a search query.')
@@ -140,14 +158,53 @@ const searchSongs = async () => {
     }
 
     const data = await response.json()
+
+    const songsInTable = await fetchSongsFromTable();
+
     searchResults.value = data.tracks.items.map((song) => ({
       ...song,
-      isLiked: false,}))
+      isLiked: songsInTable.includes(song.id),}))
   } catch (err) {
     console.error('Unexpected error:', err)
     alert('An unexpected error occurred. Please try again.')
   }
 }
+
+const toggleLike = async (songId: string) => {
+  const song = searchResults.value.find((song) => song.id === songId);
+  if (!song || song.isLiked) {
+    // If the song is already liked, do nothing
+    return;
+  }
+
+  try {
+    // Insert the song into the songs table if it doesn't exist
+    const { error: upsertError } = await supabase
+      .from('songs')
+      .upsert(
+        {
+          spotify_song_id: songId,
+          name: song.name,
+          artist: song.artists.map((artist) => artist.name).join(', '),
+          playlist_id: props.playlistId,
+          img_url: song.album.images[0]?.url,
+          added_by: user.value.id,
+          votes: 1, // Initialize votes to 1
+        },
+        { onConflict: 'id' }
+      );
+
+    if (upsertError) {
+      console.error('Error upserting song:', upsertError);
+      return;
+    }
+    // Update the UI to reflect the like
+    song.isLiked = true;
+  } catch (err) {
+    console.error('Unexpected error toggling like:', err);
+  }
+};
+
 </script>
 
 <template>
@@ -201,7 +258,7 @@ const searchSongs = async () => {
                   />
                   <Icon
                   v-else
-                  class="p-1 text-green-400 hover:bg-gray-800 rounded-full cursor-pointer"
+                  class="p-1 text-green-400 rounded-full cursor-pointer"
                   name="material-symbols:favorite-rounded"
                   size="28"
                   />

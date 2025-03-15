@@ -1,13 +1,15 @@
 <script setup lang="ts">
 const playlistCode = ref()
 const name = ref()
+const playlistId = ref<string | null>(null);
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const verify = ref('')
+
 const getPlaylist = async (code: string) => {
     const {data:isPlaylist} = await supabase
         .from('playlists')
-        .select('name')
+        .select('name,id')
         .eq('playlist_code', code.trim())
         .single()
     if(!isPlaylist){
@@ -28,6 +30,7 @@ const getPlaylist = async (code: string) => {
         }
         else {
             name.value=isPlaylist.name;
+            playlistId.value = isPlaylist.id;
             verify.value = 'true';
         }
     }
@@ -55,8 +58,9 @@ const getPlaylist = async (code: string) => {
         <div v-if="verify==='noUser'" class="text-red-400">The user is not a member in this playlist.</div>
         <div v-if="verify==='true'"class="flex flex-row justify-between items-center mb-8">
             <div class="w-full border-t-4 border-neutral-700 mt-4 mb-2">
-                <h3 class="text-2xl font-bold pt-2 mt-6 mb-4">Playlist: {{ name }}</h3>
-                <AddSong/>
+                <h3 class="text-2xl font-bold pt-2 mt-6 mb-3">Playlist: {{ name }}</h3>
+                <p class="text-gray-400 mb-4">Note: If you’ve already voted for a song, you can remove your vote from the Vote List in the playlist.</p>
+                <AddSong :playlistId="playlistId"/>
             </div>
         </div>
       </main>
