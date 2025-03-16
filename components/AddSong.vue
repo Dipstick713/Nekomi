@@ -170,13 +170,20 @@ const searchSongs = async () => {
   }
 }
 
+const formatDuration = (durationMs) => {
+  const totalSeconds = Math.floor(durationMs / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+  return `${minutes}:${formattedSeconds}`;
+};
+
 const toggleLike = async (songId: string) => {
   const song = searchResults.value.find((song) => song.id === songId);
   if (!song || song.isLiked) {
     // If the song is already liked, do nothing
     return;
   }
-
   try {
     // Insert the song into the songs table if it doesn't exist
     const { error: upsertError } = await supabase
@@ -187,6 +194,7 @@ const toggleLike = async (songId: string) => {
           name: song.name,
           artist: song.artists.map((artist) => artist.name).join(', '),
           playlist_id: props.playlistId,
+          duration: formatDuration(song.duration_ms),
           img_url: song.album.images[0]?.url,
           added_by: user.value.id,
           votes: 1, // Initialize votes to 1
@@ -198,6 +206,24 @@ const toggleLike = async (songId: string) => {
       console.error('Error upserting song:', upsertError);
       return;
     }
+
+    const{ data:id } = await supabase
+    .from('songs')
+    .select('id')
+    .eq('added_by', user.value.id)
+    .eq('spotify_song_id', songId)
+    .eq('playlist_id', props.playlistId)
+    .single()
+
+    const { error: upError } = await supabase
+      .from('votes')
+      .upsert(
+        {
+          user_id: user.value.id,
+          song_id: id.id,
+        }
+      );
+
     // Update the UI to reflect the like
     song.isLiked = true;
   } catch (err) {
