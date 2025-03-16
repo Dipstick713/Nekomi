@@ -1,7 +1,7 @@
 # Nekomi
 Nekomi is a collaborative playlist creation platform that allows users to create, share, and vote on songs together using Spotify integration.
 
-![](https://github.com/Dipstick713/Nekomi/tree/main/public/preview.gif)
+![](https://github.com/Dipstick713/Nekomi/blob/main/public/preview.gif)
 
 ## Features
 
