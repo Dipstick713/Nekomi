@@ -23,10 +23,10 @@ Nekomi is a collaborative playlist creation platform that allows users to create
 # Getting Started
 
 ## Prerequisites
-Node.js (v16 or higher)
-npm or yarn
-Supabase account
-Spotify Developer account (for Spotify API integration)
+- Node.js (v16 or higher)
+- npm or yarn
+- Supabase account
+- Spotify Developer account (for Spotify API integration)
 
 ## Installation
 1.  Clone the repository:
@@ -72,6 +72,8 @@ SPOTIFY_CLIENT_SECRET='YOUR_SPOTIFY_CLIENT_SECRET'
             
         -   `members`: Tracks playlist members.
             
+![](https://github.com/Dipstick713/Nekomi/blob/main/public/schema.png)
+
 3.  **Enable Authentication**:
     
     -   Set up authentication in Supabase and configure it in your Nuxt app.
