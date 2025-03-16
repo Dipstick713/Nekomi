@@ -3,11 +3,22 @@ const supabase = useSupabaseClient();
 const voteListSongs = ref([]);
 const route = useRoute();
 const user = useSupabaseUser();
+const totalMembers=ref(0)
 
 // Fetch songs and votes for the current playlist
 const fetchSongsFromTable = async () => {
   const userId = user.value.id;
+  const { count, error: membersError } = await supabase
+    .from('members')
+    .select('*', { count: 'exact', head: true })
+    .eq('playlist_id', route.params.id);
 
+  if (membersError) {
+    console.error('Error fetching total members:', membersError);
+    return;
+  }
+
+  totalMembers.value = count || 0; 
   // Fetch songs for the current playlist
   const { data: songs, error: songsError } = await supabase
     .from('songs')
@@ -47,6 +58,8 @@ const fetchSongsFromTable = async () => {
       };
     })
   );
+
+  
 
   // Filter songs with less than 50% votes but more than 1 vote
   voteListSongs.value = songsWithVotes.filter(song => {
@@ -136,7 +149,7 @@ const toggleLike = async (songId) => {
           <td class="py-3 px-4">{{ song.name }}</td>
           <td class="py-3 px-4 text-gray-400">{{ song.artist }}</td>
           <td class="py-3 px-4 text-gray-400">{{ song.duration }}</td>
-          <td class="py-3 px-4 text-gray-400">{{ song.totalVotes }}</td>
+          <td class="py-3 px-4 text-gray-400">{{ song.totalVotes }} / {{ totalMembers }}</td>
           <td class="py-3 px-4 text-gray-400">
             <button class="flex items-center gap-1" @click="toggleLike(song.id)">
               <Icon
