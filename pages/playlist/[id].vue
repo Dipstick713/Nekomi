@@ -85,7 +85,7 @@ onMounted(() => {
             class="bg-neutral-800 text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100"
             @click="copyPlaylistCode"
           >
-            <Icon name="material-symbols:content-copy" />Copy Link
+            <Icon name="material-symbols:content-copy" />Copy Code
           </UButton>
         </div>
       </div>

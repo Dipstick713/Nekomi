@@ -55,7 +55,7 @@ const copyPlaylistCode = async (playlistCode: string) => {
           <p class="text-gray-400 mb-4">Created by: {{ playlist.users.display_name }}</p>
           <div class="flex space-x-4">
             <UButton @click="copyPlaylistCode(playlist.playlist_code)">
-              <Icon name="material-symbols:content-copy" />Copy Link
+              <Icon name="material-symbols:content-copy" />Copy Code
             </UButton>
             <UButton @click="navigateTo(`/playlist/${playlist.id}`)">
               Enter playlist <Icon name="material-symbols:arrow-forward-ios-rounded" />

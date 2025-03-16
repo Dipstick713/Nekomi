@@ -119,9 +119,11 @@ const toggleLike = async (songId) => {
         <div class="font-bold">Add your favourite songs</div>
         <div class="text-gray-400">If the number of votes surpasses 50%, the track will be added to the playlist for everyone to enjoy.</div>
       </div>
+      <NuxtLink to=/add>
       <UButton class="h-10">
         <Icon name="material-symbols:playlist-add" size="24px" />Add Song
       </UButton>
+      </NuxtLink>
     </div>
     <div class="font-bold text-2xl mb-3 border-t-4 border-neutral-700 pt-3">Vote List</div>
     <table class="min-w-full bg-neutral-800 rounded-lg">
