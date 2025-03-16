@@ -96,7 +96,7 @@
     <!-- Footer -->
     <footer class="bg-neutral-800 p-6 flex flex-row justify-center text-center">
         <a
-        href="https://github.com/Dipstick713"
+        href="https://github.com/Dipstick713/Nekomi"
         target="_blank"
         class="text-white underline"
         >
