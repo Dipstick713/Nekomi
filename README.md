@@ -84,6 +84,7 @@ SPOTIFY_CLIENT_SECRET='YOUR_SPOTIFY_CLIENT_SECRET'
 - Get your SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.
 - Set Up Spotify API:
 	- Use the Spotify API to 
+        - get user data.
 		- get access and refresh tokens.
 		- fetch song details and integrate them into your app.
 
