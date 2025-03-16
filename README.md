@@ -88,7 +88,7 @@ SPOTIFY_CLIENT_SECRET='YOUR_SPOTIFY_CLIENT_SECRET'
 		- fetch song details and integrate them into your app.
 
 # Acknowledgments
-[Nuxt.js](https://nuxt.com) Nuxt.js for the awesome framework.
-[Supabase](https://supabase.io/)  for the backend and database.
-[Spotify API](https://developer.spotify.com/) for song integration.
-[Tailwind CSS](https://tailwindcss.com/) for styling.
+- [Nuxt.js](https://nuxt.com) Nuxt.js for the awesome framework.\
+- [Supabase](https://supabase.io/)  for the backend and database.\
+- [Spotify API](https://developer.spotify.com/) for song integration.\
+- [Tailwind CSS](https://tailwindcss.com/) for styling.
