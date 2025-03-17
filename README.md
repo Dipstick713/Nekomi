@@ -84,12 +84,12 @@ SPOTIFY_CLIENT_SECRET='YOUR_SPOTIFY_CLIENT_SECRET'
 - Get your SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.
 - Set Up Spotify API:
 	- Use the Spotify API to 
-        - get user data.
+        - get user data to display user profile.
 		- get access and refresh tokens.
 		- fetch song details and integrate them into your app.
 
 # Acknowledgments
-- [Nuxt.js](https://nuxt.com) Nuxt.js for the awesome framework.
+- [Nuxt.js](https://nuxt.com) for the awesome framework.
 - [Supabase](https://supabase.io/)  for the backend and database.
 - [Spotify API](https://developer.spotify.com/) for song integration.
 - [Tailwind CSS](https://tailwindcss.com/) for styling.
